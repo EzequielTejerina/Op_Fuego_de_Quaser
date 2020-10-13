@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="INFO" monitorInternal="300">
+    <Console name="Console" target="SYSTEM_OUT">
+        <PatterLayout pattern="%d{HH:mm:ss} [%-S level] - %smsg%n"/>
+    </Console>
+    <Loggers>
+        <Root level="all">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
