@@ -43,14 +43,14 @@ public class CommunicationService {
         Iterator<String> it = mappingMessages.iterator();
         while(it.hasNext()){
             String word = it.next();
-            if(!word.isEmpty()){
+            if(!word.isEmpty() && !word.trim().equals("")){
                 message = message.concat(" ").concat(word);
             }
         }
 
-        logger.info("El mensaje enviado por el emisor fue: ".concat(message).concat("."));
+        logger.info("El mensaje enviado por el emisor fue: ".concat(message.trim()).concat("."));
 
-        return message;
+        return message.trim();
     }
     public Coordinate getLocation(final Float... distances){
         Coordinate coord = new Coordinate();
