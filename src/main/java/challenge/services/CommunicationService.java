@@ -1,15 +1,19 @@
 package challenge.services;
 
+import challenge.dto.SatelliteDTO;
 import challenge.enums.SateliteEnum;
 import challenge.exception.ServiceException;
 import challenge.model.Coordinate;
 import challenge.model.Satellite;
+import challenge.repositories.SatelliteRepository;
 import challenge.request.TopSecretRequest;
+import challenge.request.TopSecretSplitRequest;
 import challenge.response.ObjectResponse;
 import challenge.utils.ArrayUtil;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,9 +24,11 @@ import java.util.*;
 public class CommunicationService {
 
     private Logger logger = LogManager.getLogger(getClass());
+    @Autowired
+    private SatelliteRepository satelliteRepository;
+    private Gson gson = new Gson();
 
     public Object topSecret(String requestBody) throws ServiceException {
-        Gson gson = new Gson();
         ObjectResponse response = new ObjectResponse();
         TopSecretRequest request = gson.fromJson(requestBody, TopSecretRequest.class);
         if(StringUtils.isEmpty(request.getSatellites())){
@@ -33,11 +39,40 @@ public class CommunicationService {
         return gson.toJson(response);
     }
 
-    public Object topSecretSplit(String satelliteName, String requestBody) {
-        //JSONObject jsonResponse = new JSONObject();
-
-
-        return "";
+    public Object saveTopSecretSplit(String satelliteName, String requestBody) throws ServiceException {
+        boolean nameValid = this.isSatelliteNameValid(satelliteName);
+        if(nameValid){
+            TopSecretSplitRequest request = gson.fromJson(requestBody, TopSecretSplitRequest.class);
+            if(StringUtils.isEmpty(request.getDistance()) || StringUtils.isEmpty(request.getMessage())){
+                throw new ServiceException(HttpStatus.BAD_REQUEST, "Request incorrecto");
+            }
+            SatelliteDTO satelliteDTO = new SatelliteDTO(satelliteName, request.getDistance(), request.getMessage()),
+                    satellite = this.satelliteRepository.findByName(satelliteName);
+            if(StringUtils.isEmpty(satellite)){
+                this.satelliteRepository.save(satelliteDTO);
+            }else{
+                satellite.setDistance(satelliteDTO.getDistance());
+                satellite.setMessage(satelliteDTO.getMessage());
+                this.satelliteRepository.save(satellite);
+            }
+            return gson.toJson(satelliteDTO);
+        }else{
+            logger.error("El nombre del satelite invalido.");
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "Nombre de satelite invalido.");
+        }
+    }
+    public Object getTopSecretSplit() throws ServiceException {
+        ObjectResponse response = new ObjectResponse();
+        List<SatelliteDTO> satellitesBD = this.satelliteRepository.findAll();
+        List<Satellite> satellites;
+        if(satellitesBD.size() == 0){
+            throw new ServiceException(HttpStatus.NOT_FOUND, "No hay datos para obtener la posicion y el mensaje del emisor.");
+        }
+        satellites = this.formatSatellites(satellitesBD);
+        response.setPosition(this.getLocation(this.getArrayDistances(satellites)));
+        response.setMessage(this.getFinalMessage(satellites));
+        this.satelliteRepository.deleteAll();
+        return gson.toJson(response);
     }
 
     public String getMessage(final String... messages){
@@ -113,6 +148,27 @@ public class CommunicationService {
             arrayMessages[entry.getKey()] = entry.getValue();
         }
         return this.getMessage(arrayMessages);
+    }
+    private boolean isSatelliteNameValid(String name) throws ServiceException {
+        boolean isValid = false;
+        if(!name.isEmpty()){
+            if(name.toLowerCase().equals(SateliteEnum.KENOBI.getName()) || name.toLowerCase().equals(SateliteEnum.SKYWALKER.getName()) || name.toLowerCase().equals(SateliteEnum.SATO.getName())){
+                isValid = true;
+            }
+        }else{
+            logger.error("El nombre del satellite es vacio.");
+            throw new ServiceException(HttpStatus.BAD_REQUEST, "Falta el request param satellite_name");
+        }
+
+        return isValid;
+    }
+    private List<Satellite> formatSatellites(List<SatelliteDTO> satelliteBd){
+        List<Satellite> satellites = new ArrayList<Satellite>();
+        for(SatelliteDTO sat : satelliteBd){
+            Satellite s = new Satellite(sat.getName(), sat.getDistance(), sat.getMessage());
+            satellites.add(s);
+        }
+        return satellites;
     }
 }
 

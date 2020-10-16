@@ -5,7 +5,7 @@ import challenge.model.Satellite;
 import java.util.List;
 
 public class TopSecretRequest {
-    List<Satellite> satellites;
+    private List<Satellite> satellites;
 
     public List<Satellite> getSatellites() {
         return satellites;

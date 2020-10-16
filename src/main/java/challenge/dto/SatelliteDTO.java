@@ -1,14 +1,32 @@
-package challenge.model;
+package challenge.dto;
 
-public class Satellite {
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "satellites")
+public class SatelliteDTO {
+
+    @Id
+    private ObjectId _id;
     private String name;
     private Float distance;
     private String[] message;
 
-    public Satellite(String name, Float distance, String[] message) {
+    public SatelliteDTO(){}
+
+    public SatelliteDTO(String name, Float distance, String[] message) {
         this.name = name;
         this.distance = distance;
         this.message = message;
+    }
+
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     public String getName() {
