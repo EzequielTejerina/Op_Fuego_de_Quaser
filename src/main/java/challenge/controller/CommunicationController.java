@@ -21,7 +21,7 @@ public class CommunicationController extends BaseController{
             this.logger.info("Llamada al servicio /topsecret/ con el request body : {}", requestBody);
             return new ResponseEntity<>(this.communicationService.topSecret(requestBody), HttpStatus.OK);
         }catch(ServiceException ex){
-            throw ex;
+            return ResponseEntity.status(ex.getCode()).body(ex.toString());
         }catch(Exception e){
             this.logger.error(ExceptionUtil.getStackTra(e));
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -32,16 +32,20 @@ public class CommunicationController extends BaseController{
         try{
             this.logger.info("Llamada al servicio post /topsecret_split/ con el request body : {}", requestBody);
             return new ResponseEntity<>(this.communicationService.saveTopSecretSplit(satelliteName, requestBody), HttpStatus.OK);
-        } catch(Exception e){
+        } catch(ServiceException ex){
+            return ResponseEntity.status(ex.getCode()).body(ex.toString());
+        }catch(Exception e){
             this.logger.error(ExceptionUtil.getStackTra(e));
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
-    @GetMapping(value = "/topsecret_split/", consumes = JSON_UTF8, produces = JSON_UTF8)
+    @GetMapping(value = "/topsecret_split/", produces = JSON_UTF8)
     public ResponseEntity<Object> topSecretSplitGet() throws ServiceException {
         try{
             this.logger.info("Llamada al servicio get /topsecret_split/");
             return new ResponseEntity<>(this.communicationService.getTopSecretSplit(), HttpStatus.OK);
+        }catch(ServiceException ex){
+            return ResponseEntity.status(ex.getCode()).body(ex.toString());
         } catch(Exception e){
             this.logger.error(ExceptionUtil.getStackTra(e));
             throw new ServiceException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

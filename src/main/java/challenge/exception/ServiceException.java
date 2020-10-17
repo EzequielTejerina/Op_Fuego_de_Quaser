@@ -43,4 +43,13 @@ public class ServiceException extends Exception{
     public void setCode(Integer code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "httpStatus=" + httpStatus +
+                ", message='" + message + '\'' +
+                ", code=" + code +
+                '}';
+    }
 }

@@ -155,9 +155,6 @@ public class CommunicationService {
             if(name.toLowerCase().equals(SateliteEnum.KENOBI.getName()) || name.toLowerCase().equals(SateliteEnum.SKYWALKER.getName()) || name.toLowerCase().equals(SateliteEnum.SATO.getName())){
                 isValid = true;
             }
-        }else{
-            logger.error("El nombre del satellite es vacio.");
-            throw new ServiceException(HttpStatus.BAD_REQUEST, "Falta el request param satellite_name");
         }
 
         return isValid;
