@@ -39,4 +39,4 @@ $ mvn spring-boot:run
 De esta manera, la aplicación se encontraría levantada en 'http://localhost:8080/challenge/' y habría que utilizar esta URL si quisiéramos probar localmente las APIs a través de [Postman](https://www.getpostman.com/) por ejemplo.
 
 ## Uso
-Para ver los Ingresando a la URL http://localhost:8080/swagger-ui.html
+Los servicios expuestos se pueden ver ingresando a la URL http://localhost:8080/swagger-ui.html
