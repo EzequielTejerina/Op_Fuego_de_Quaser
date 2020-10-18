@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SwaggerCodegen: swagger.yaml" type="SwaggerCodegen">
+    <option name="activeConfigurationType" value="FILE" />
+    <option name="configurationPath" value="C:\Workspaces\Op_Fuego_de_Quaser\src\main\resources\swagger.json" />
+    <option name="customJreEnabled" value="false" />
+    <option name="customJrePath" value="null" />
+    <option name="customTemplatesPath" value="" />
+    <option name="enableDebugLogging" value="false" />
+    <option name="generateToPath" value="" />
+    <option name="generationParameters">
+      <list>
+        <CliArgumentViewModel>
+          <option name="name" value="" />
+          <option name="value" />
+        </CliArgumentViewModel>
+      </list>
+    </option>
+    <option name="generatorPath" value="" />
+    <option name="language" value="" />
+    <option name="specificationPath" value="C:\Workspaces\Op_Fuego_de_Quaser\src\main\resources\swagger.json" />
+    <method v="2" />
+  </configuration>
+</component>
